@@ -1,0 +1,59 @@
+.O-TodayReminders {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.O-TodayReminders__title {
+  margin: 0;
+  font: var(--font-24);
+  color: var(--color-text);
+}
+
+.O-TodayReminders__empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  padding: 8px 0 0;
+}
+
+.O-TodayReminders__icon {
+  font-size: 78px;
+  line-height: 1;
+  color: #d8baf4;
+  opacity: 0.95;
+}
+
+.O-TodayReminders__text {
+  font: var(--font-16);
+  color: var(--color-grey-text);
+  text-align: center;
+}
+
+.O-TodayReminders__button {
+  height: 54px;
+  border-radius: 999px;
+  border: 2px solid #d7b6f4;
+  background: transparent;
+  color: var(--color-text);
+  font: var(--font-20);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  cursor: pointer;
+  width: 100%;
+  max-width: 310px;
+  align-self: center;
+}
+
+.A-Icon-Calendar {
+  width: 100px;
+  height: 100px;
+}
+
+.O-TodayReminders__buttonPlus {
+  font-size: 26px;
+  line-height: 1;
+}

@@ -1,0 +1,19 @@
+.L-App {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  background: var(--color-bg);
+}
+
+.L-App__screen {
+  width: 100%;
+  max-width: var(--screen-max-width);
+  min-height: 100vh;
+  background: var(--color-bg);
+  position: relative;
+}
+
+.L-App__main {
+  padding: var(--screen-padding);
+  padding-bottom: calc(var(--bottom-nav-height) + 20px);
+}

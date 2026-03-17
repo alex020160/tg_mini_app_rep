@@ -1,0 +1,13 @@
+.P-Calendar {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.P-Calendar__calendarSection {
+  margin-top: 4px;
+}
+
+.P-Calendar__remindersSection {
+  margin-top: 4px;
+}

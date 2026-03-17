@@ -1,0 +1,52 @@
+.P-Home {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.W-HomeHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding-top: 2px;
+}
+
+.A-HomeGreeting {
+  font: var(--font-20);
+  color: var(--color-text);
+  margin-top: 8px;
+}
+
+.W-HomeSection {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.W-SectionTitleRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.A-SectionTitle {
+  margin: 0;
+  font: var(--font-24);
+  color: var(--color-text);
+}
+
+.A-SectionAddButton,
+.A-HeaderCircleButton {
+  width: 46px;
+  height: 46px;
+  border: none;
+  border-radius: 50%;
+  background: var(--color-purple);
+  color: var(--color-text);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--shadow-soft);
+  cursor: pointer;
+  flex-shrink: 0;
+}

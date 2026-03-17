@@ -1,0 +1,79 @@
+.O-EventsCard {
+  background: var(--color-white);
+  border-radius: 16px;
+  box-shadow: var(--shadow-soft);
+  padding: 10px 12px 12px;
+}
+
+.M-EventRow {
+  position: relative;
+  display: flex;
+  gap: 12px;
+  padding: 10px 0 12px;
+}
+
+.M-EventRow__date {
+  width: 40px;
+  min-width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background: var(--color-purple);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.M-EventRow__weekday {
+  font-size: 16px;
+  line-height: 1;
+  color: var(--color-grey-text);
+  text-transform: uppercase;
+  margin-bottom: 1px;
+}
+
+.M-EventRow__day {
+  font-size: 18px;
+  line-height: 1;
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.M-EventRow__content {
+  flex: 1;
+  min-width: 0;
+}
+
+.M-EventRow__title {
+  font-size: 16px;
+  line-height: 1.25;
+  font-weight: 500;
+  color: var(--color-text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.M-EventRow__meta {
+  margin-top: 2px;
+  font-size: 12px;
+  line-height: 1.2;
+  color: var(--color-grey-text);
+}
+
+.M-EventRow__divider {
+  position: absolute;
+  left: 52px;
+  right: 0;
+  bottom: 0;
+  height: 1px;
+  background: rgba(111, 107, 127, 0.16);
+}
+
+.O-EventsCard__footer {
+  text-align: right;
+  font-size: 12px;
+  line-height: 1.2;
+  color: var(--color-grey-text);
+  margin-top: 4px;
+}
