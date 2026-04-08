@@ -21,8 +21,18 @@ def dev_login(
         )
 
     user = db.query(User).filter(User.telegram_id == telegram_id).first()
+
     if not user:
-        raise HTTPException(status_code=404, detail="User not found")
+        user = User(
+            telegram_id=telegram_id,
+            first_name="Dev",
+            last_name=None,
+            username=f"dev_{telegram_id}",
+            timezone="UTC",
+        )
+        db.add(user)
+        db.commit()
+        db.refresh(user)
 
     token = create_access_token(
         {
