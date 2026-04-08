@@ -1,3 +1,4 @@
+from pydantic import Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -6,6 +7,7 @@ class Settings(BaseSettings):
 
     app_name: str = "TG MiniApp API"
     env: str = "dev"
+    debug: bool = False
 
     database_url: str
 
@@ -16,6 +18,7 @@ class Settings(BaseSettings):
     telegram_bot_token: str
 
     cors_origins: str = ""
+    allow_dev_login: bool = True
 
     @property
     def cors_origins_list(self) -> list[str]:

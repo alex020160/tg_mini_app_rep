@@ -3,6 +3,8 @@ from app.api.routes.health import router as health_router
 from app.api.routes.pets import router as pets_router
 from app.api.routes.events import router as events_router
 from app.api.routes.dashboard import router as dashboard_router
+from app.api.routes.calendar import router as calendar_router
+from app.api.routes.dev import router as dev_router
 
 def get_routers():
     return [
@@ -10,5 +12,7 @@ def get_routers():
         auth_router,
         pets_router,
         events_router,
-        dashboard_router
+        dashboard_router,
+        calendar_router,
+        dev_router
     ]

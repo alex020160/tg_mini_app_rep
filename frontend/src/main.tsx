@@ -5,11 +5,20 @@ import { RouterProvider } from "react-router-dom";
 import "./index.css";
 import { router } from "./app/router";
 import { initTelegram } from "./shared/telegram/init";
+import { bootstrapAuth } from "./shared/auth/bootstrap";
+import { AppProviders } from "./app/providers";
 
-initTelegram();
+async function startApp() {
+  initTelegram();
+  await bootstrapAuth();
 
-createRoot(document.getElementById("root")!).render(
-  <StrictMode>
-    <RouterProvider router={router} />
-  </StrictMode>,
-);
+  createRoot(document.getElementById("root")!).render(
+    <StrictMode>
+      <AppProviders>
+        <RouterProvider router={router} />
+      </AppProviders>
+    </StrictMode>,
+  );
+}
+
+startApp();
