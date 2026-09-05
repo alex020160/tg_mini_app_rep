@@ -146,6 +146,22 @@ async def _send_reminder_to_user(user: User, text: str) -> None:
     raise ValueError("User does not have an enabled reminder channel")
 
 
+async def send_vk_test_message(user: User) -> None:
+    if user.platform != "vk":
+        raise ValueError("User is not a VK user")
+
+    if user.vk_messages_allowed_at is None:
+        raise ValueError("VK messages are not enabled for this user")
+
+    await _send_vk_group_message(
+        user_id=user.platform_user_id,
+        text=(
+            "SmartPet Helper на связи.\n\n"
+            "Тестовое сообщение отправлено успешно, теперь сюда смогут приходить напоминания."
+        ),
+    )
+
+
 async def send_inactive_user_message(user: User) -> None:
     if not settings.telegram_bot_token:
         raise RuntimeError("Telegram bot token is not configured")

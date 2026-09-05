@@ -513,13 +513,29 @@ export default function PassportPetPage() {
               аккаунт вместе с напоминаниями и историей здоровья.
             </p>
             <div className="P-PassportLive__linkStack">
-              <a href={petTransferLinks.telegram}>Открыть через Telegram</a>
-              <a href={petTransferLinks.vk}>Открыть через VK</a>
+              <button
+                type="button"
+                onClick={() => {
+                  void navigator.clipboard?.writeText(petTransferLinks.telegram);
+                  showToast("Telegram-ссылка скопирована", "success");
+                }}
+              >
+                Скопировать Telegram-ссылку
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  void navigator.clipboard?.writeText(petTransferLinks.vk);
+                  showToast("VK-ссылка скопирована", "success");
+                }}
+              >
+                Скопировать VK-ссылку
+              </button>
               <button
                 type="button"
                 onClick={() => {
                   void navigator.clipboard?.writeText(petTransferLinks.web);
-                  showToast("Ссылка скопирована", "success");
+                  showToast("Обычная ссылка скопирована", "success");
                 }}
               >
                 Скопировать обычную ссылку

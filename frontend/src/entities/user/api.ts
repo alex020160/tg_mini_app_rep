@@ -23,3 +23,8 @@ export async function updateVkMessages(payload: UpdateVkMessagesPayload) {
   const response = await api.post<AuthUser>("/users/me/vk-messages", payload);
   return normalizeAuthUser(response.data);
 }
+
+export async function sendVkMessagesTest() {
+  const response = await api.post<{ status: "sent" }>("/users/me/vk-messages/test");
+  return response.data;
+}

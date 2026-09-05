@@ -1,6 +1,7 @@
 from datetime import datetime, timezone
 from zoneinfo import ZoneInfo, ZoneInfoNotFoundError
 
+import httpx
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 
@@ -8,6 +9,7 @@ from app.api.deps import get_current_user, get_db
 from app.models.user import User
 from app.schemas.auth import UserInfoResponse
 from app.schemas.user import UserUpdate, VkMessagesUpdate
+from app.services.notifications import send_vk_test_message
 
 router = APIRouter(prefix="/users", tags=["users"])
 
@@ -57,3 +59,21 @@ def update_vk_messages(
     db.commit()
     db.refresh(current_user)
     return current_user
+
+
+@router.post("/me/vk-messages/test")
+async def send_vk_messages_test(current_user: User = Depends(get_current_user)):
+    try:
+        await send_vk_test_message(current_user)
+    except httpx.HTTPStatusError as e:
+        raise HTTPException(
+            status_code=status.HTTP_502_BAD_GATEWAY,
+            detail=f"VK API HTTP status {e.response.status_code}: {e.response.text}",
+        ) from e
+    except (RuntimeError, ValueError) as e:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=str(e),
+        ) from e
+
+    return {"status": "sent"}

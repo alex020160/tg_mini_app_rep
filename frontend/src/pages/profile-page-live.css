@@ -105,7 +105,8 @@
 
 .P-ProfilePageLive__pillRow,
 .P-ProfilePageLive__actions,
-.P-ProfilePageLive__filterRow {
+.P-ProfilePageLive__filterRow,
+.P-ProfilePageLive__vkMessagesActions {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
@@ -385,6 +386,11 @@
 .P-ProfilePageLive__vkMessagesButton:disabled {
   cursor: default;
   opacity: 0.72;
+}
+
+.P-ProfilePageLive__vkMessagesButton--ghost {
+  border: 1px solid rgba(41, 31, 58, 0.14);
+  background: transparent;
 }
 
 .P-ProfilePageLive__actionButton--ghost {

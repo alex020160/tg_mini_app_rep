@@ -1,5 +1,6 @@
 import { api } from "@/shared/api/client";
 import type { Pet } from "@/entities/pet/api";
+import { buildTelegramTransferLink, buildVkTransferLink } from "@/shared/promo/promo";
 
 export type PetTransfer = {
   token: string;
@@ -14,15 +15,12 @@ export type PetTransfer = {
   cancelled_at: string | null;
 };
 
-const telegramBotUsername = "SmartPetHelper_bot";
-const vkAppId = "54599546";
-
 export function buildPetTransferLinks(token: string) {
   const encodedToken = encodeURIComponent(token);
 
   return {
-    telegram: `https://t.me/${telegramBotUsername}?startapp=transfer_${encodedToken}`,
-    vk: `https://vk.ru/app${vkAppId}#transfer=${encodedToken}`,
+    telegram: buildTelegramTransferLink(token),
+    vk: buildVkTransferLink(token),
     web: `${window.location.origin}/transfer/${encodedToken}`,
   };
 }

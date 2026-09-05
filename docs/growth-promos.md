@@ -136,3 +136,6 @@ VITE_VK_GROUP_ID=239532031
 
 The group token should be generated in the VK community settings. It must allow
 the community to send messages. Do not put the group token into frontend/Vercel.
+After enabling messages in the profile, use the `Отправить тест VK` button to
+verify that the community token and permissions work before testing scheduled
+reminders.

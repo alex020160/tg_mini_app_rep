@@ -8,7 +8,13 @@ import { initAnalytics, trackEvent, trackPageView } from "./shared/analytics/met
 import { bootstrapAuth } from "./shared/auth/bootstrap";
 import { detectRuntimePlatform, getPlatformDisplayName, initPlatform } from "./shared/platform";
 import { AppProviders } from "./app/providers";
-import { buildTelegramPromoLink, getLaunchPromoCode, getLaunchTransferToken } from "./shared/promo/promo";
+import {
+  buildTelegramPromoLink,
+  buildTelegramTransferLink,
+  buildVkTransferLink,
+  getLaunchPromoCode,
+  getLaunchTransferToken,
+} from "./shared/promo/promo";
 
 const rootElement = document.getElementById("root");
 
@@ -167,6 +173,86 @@ function renderBootError(message: string) {
   );
 }
 
+function renderTransferOpenOptions(token: string) {
+  const telegramLink = buildTelegramTransferLink(token);
+  const vkLink = buildVkTransferLink(token);
+
+  trackPageView("/transfer-open-options", {
+    screen: "transfer_open_options",
+    source: "browser",
+  });
+
+  root.render(
+    <StrictMode>
+      <div
+        style={{
+          minHeight: "100vh",
+          display: "grid",
+          placeItems: "center",
+          padding: "24px",
+          background: "var(--color-bg)",
+          color: "var(--color-text)",
+        }}
+      >
+        <div
+          style={{
+            width: "100%",
+            maxWidth: "430px",
+            background: "var(--color-white)",
+            borderRadius: "24px",
+            padding: "24px",
+            boxShadow: "var(--shadow-soft)",
+            display: "grid",
+            gap: "14px",
+          }}
+        >
+          <div style={{ font: "var(--font-24)" }}>Передача питомца</div>
+          <div style={{ font: "var(--font-14)", color: "var(--color-grey-text)" }}>
+            Откройте ссылку в том аккаунте Telegram или VK, куда нужно принять питомца.
+            Обычный браузер не может определить владельца аккаунта.
+          </div>
+          <a
+            href={telegramLink}
+            style={{
+              minHeight: "44px",
+              borderRadius: "999px",
+              background: "var(--color-purple)",
+              color: "var(--color-text)",
+              display: "inline-flex",
+              alignItems: "center",
+              justifyContent: "center",
+              textDecoration: "none",
+              font: "var(--font-16)",
+            }}
+          >
+            Открыть в Telegram
+          </a>
+          <a
+            href={vkLink}
+            style={{
+              minHeight: "44px",
+              borderRadius: "999px",
+              border: "1px solid rgba(41, 31, 58, 0.14)",
+              color: "var(--color-text)",
+              display: "inline-flex",
+              alignItems: "center",
+              justifyContent: "center",
+              textDecoration: "none",
+              font: "var(--font-16)",
+            }}
+          >
+            Открыть во VK
+          </a>
+          <div style={{ font: "var(--font-12)", color: "var(--color-grey-text)" }}>
+            Если ссылку открыл заводчик, ее нужно переслать новому владельцу. Принимать
+            питомца должен новый владелец со своего аккаунта.
+          </div>
+        </div>
+      </div>
+    </StrictMode>,
+  );
+}
+
 async function startApp() {
   initAnalytics();
   trackPageView(`${window.location.pathname}${window.location.search}`, {
@@ -174,7 +260,15 @@ async function startApp() {
     source: "startup",
   });
 
-  if (detectRuntimePlatform() === "browser" && getLaunchPromoCode()) {
+  const runtimePlatform = detectRuntimePlatform();
+  const launchTransferToken = getLaunchTransferToken();
+
+  if (runtimePlatform === "browser" && launchTransferToken) {
+    renderTransferOpenOptions(launchTransferToken);
+    return;
+  }
+
+  if (runtimePlatform === "browser" && getLaunchPromoCode()) {
     window.location.replace(buildTelegramPromoLink());
     return;
   }

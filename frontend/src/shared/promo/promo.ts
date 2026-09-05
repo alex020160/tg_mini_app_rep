@@ -3,6 +3,7 @@ import { getTelegramInitData } from "@/shared/platform/telegram";
 const promoParamNames = ["promo", "tgWebAppStartParam", "start_param", "startapp"];
 const launchParamNames = ["tgWebAppStartParam", "start_param", "startapp"];
 const telegramBotUsername = "SmartPetHelper_bot";
+const vkAppId = "54599546";
 const transferPrefix = "transfer_";
 
 function readFromParams(value: string, paramNames: string[]) {
@@ -25,6 +26,11 @@ function normalizeTransferToken(value: string) {
   return value.startsWith(transferPrefix) ? value.slice(transferPrefix.length) : value;
 }
 
+function readTransferTokenFromPath() {
+  const match = window.location.pathname.match(/^\/transfer\/([^/]+)/);
+  return match?.[1] ? decodeURIComponent(match[1]) : "";
+}
+
 export function getLaunchPromoCode() {
   const fromWebApp = window.Telegram?.WebApp?.initDataUnsafe?.start_param;
   if (fromWebApp) return normalizePromoCode(fromWebApp);
@@ -39,6 +45,9 @@ export function getLaunchPromoCode() {
 }
 
 export function getLaunchTransferToken() {
+  const fromPath = readTransferTokenFromPath();
+  if (fromPath) return normalizeTransferToken(fromPath);
+
   const fromWebApp = window.Telegram?.WebApp?.initDataUnsafe?.start_param;
   if (fromWebApp?.startsWith(transferPrefix)) return normalizeTransferToken(fromWebApp);
 
@@ -67,4 +76,12 @@ export function getLaunchTransferToken() {
 export function buildTelegramPromoLink(code = getLaunchPromoCode()) {
   const query = code ? `?startapp=${encodeURIComponent(code)}` : "?startapp";
   return `https://t.me/${telegramBotUsername}${query}`;
+}
+
+export function buildTelegramTransferLink(token: string) {
+  return `https://t.me/${telegramBotUsername}?startapp=${transferPrefix}${encodeURIComponent(token)}`;
+}
+
+export function buildVkTransferLink(token: string) {
+  return `https://vk.ru/app${vkAppId}#transfer=${encodeURIComponent(token)}`;
 }

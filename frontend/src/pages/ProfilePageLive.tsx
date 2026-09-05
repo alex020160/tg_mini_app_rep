@@ -4,7 +4,12 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import AppLayout from "../widgets/layout/AppLayout";
 import { getEvents } from "../entities/event/api";
 import { getPets } from "../entities/pet/api";
-import { getCurrentUser, updateCurrentUser, updateVkMessages } from "../entities/user/api";
+import {
+  getCurrentUser,
+  sendVkMessagesTest,
+  updateCurrentUser,
+  updateVkMessages,
+} from "../entities/user/api";
 import type { AuthUser } from "../features/auth/api";
 import {
   buildPassportEditPath,
@@ -136,6 +141,19 @@ export default function ProfilePageLive() {
     onError: () => {
       showToast("Не удалось подключить сообщения VK", "error");
       trackEvent("vk_messages_enable_failed");
+    },
+  });
+
+  const sendVkMessagesTestMutation = useMutation({
+    mutationFn: sendVkMessagesTest,
+    onSuccess: () => {
+      showToast("Тестовое сообщение VK отправлено", "success");
+      trackEvent("vk_messages_test_sent");
+    },
+    onError: (error) => {
+      const detail = (error as { response?: { data?: { detail?: string } } })?.response?.data?.detail;
+      showToast(detail || "VK не принял тестовое сообщение", "error");
+      trackEvent("vk_messages_test_failed");
     },
   });
 
@@ -285,21 +303,36 @@ export default function ProfilePageLive() {
             ) : null}
 
             {user?.platform === "vk" ? (
-              <button
-                type="button"
-                className="P-ProfilePageLive__vkMessagesButton"
-                disabled={updateVkMessagesMutation.isPending || isVkMessagesEnabled}
-                onClick={() => {
-                  trackButtonClick("profile_vk_messages");
-                  updateVkMessagesMutation.mutate();
-                }}
-              >
-                {isVkMessagesEnabled
-                  ? "Напоминания во VK подключены"
-                  : updateVkMessagesMutation.isPending
-                    ? "Подключаем VK..."
-                    : "Получать напоминания во VK"}
-              </button>
+              <div className="P-ProfilePageLive__vkMessagesActions">
+                <button
+                  type="button"
+                  className="P-ProfilePageLive__vkMessagesButton"
+                  disabled={updateVkMessagesMutation.isPending || isVkMessagesEnabled}
+                  onClick={() => {
+                    trackButtonClick("profile_vk_messages");
+                    updateVkMessagesMutation.mutate();
+                  }}
+                >
+                  {isVkMessagesEnabled
+                    ? "Напоминания во VK подключены"
+                    : updateVkMessagesMutation.isPending
+                      ? "Подключаем VK..."
+                      : "Получать напоминания во VK"}
+                </button>
+                {isVkMessagesEnabled ? (
+                  <button
+                    type="button"
+                    className="P-ProfilePageLive__vkMessagesButton P-ProfilePageLive__vkMessagesButton--ghost"
+                    disabled={sendVkMessagesTestMutation.isPending}
+                    onClick={() => {
+                      trackButtonClick("profile_vk_messages_test");
+                      sendVkMessagesTestMutation.mutate();
+                    }}
+                  >
+                    {sendVkMessagesTestMutation.isPending ? "Проверяем..." : "Отправить тест VK"}
+                  </button>
+                ) : null}
+              </div>
             ) : null}
 
             <label className="P-ProfilePageLive__timezoneField">
