@@ -1,7 +1,12 @@
 import { useMemo } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { acceptPetTransfer, getPetTransfer } from "@/entities/petTransfer/api";
+import {
+  acceptPetTransfer,
+  buildPetTransferLinks,
+  getPetTransfer,
+} from "@/entities/petTransfer/api";
+import { getApiErrorMessage } from "@/shared/api/errors";
 import { trackButtonClick, trackEvent } from "@/shared/analytics/metrica";
 import { useToast } from "@/shared/ui/useToast";
 import AppLayout from "../widgets/layout/AppLayout";
@@ -40,6 +45,19 @@ export default function PetTransferPage() {
     () => (transfer ? formatDate(transfer.expires_at) : ""),
     [transfer],
   );
+  const transferLinks = useMemo(
+    () => (transfer ? buildPetTransferLinks(transfer.token) : null),
+    [transfer],
+  );
+
+  async function copyLink(value: string, label: string) {
+    try {
+      await navigator.clipboard?.writeText(value);
+      showToast(`${label} скопирована`, "success");
+    } catch {
+      showToast("Не получилось скопировать ссылку", "error");
+    }
+  }
 
   const acceptMutation = useMutation({
     mutationFn: () => acceptPetTransfer(token),
@@ -50,8 +68,7 @@ export default function PetTransferPage() {
       navigate(`/passport/${acceptedTransfer.pet_id}`, { replace: true });
     },
     onError: (error) => {
-      const message = error instanceof Error ? error.message : "Не удалось принять питомца";
-      showToast(message, "error");
+      showToast(getApiErrorMessage(error, "Не удалось принять питомца"), "error");
     },
   });
 
@@ -81,6 +98,57 @@ export default function PetTransferPage() {
             <Link className="P-PetTransfer__primaryAction" to="/">
               На главный экран
             </Link>
+          </section>
+        ) : transfer.is_sender ? (
+          <section className="P-PetTransfer__card">
+            <p className="P-PetTransfer__eyebrow">Ссылка создана</p>
+            <h1>{transfer.pet_name}</h1>
+            <p>
+              Вы открыли передачу из аккаунта отправителя. Чтобы передать питомца,
+              отправьте ссылку новому владельцу, а принять ее он должен уже из своего
+              аккаунта Telegram или VK.
+            </p>
+            <div className="P-PetTransfer__notice">
+              После принятия питомец исчезнет из аккаунта заводчика и появится у нового
+              владельца вместе с напоминаниями и историей здоровья. Ссылка действует до
+              {" "}
+              {expiresAt}.
+            </div>
+
+            {transferLinks ? (
+              <div className="P-PetTransfer__actions">
+                <button
+                  type="button"
+                  className="P-PetTransfer__secondaryAction"
+                  onClick={() => {
+                    trackButtonClick("pet_transfer_copy_telegram");
+                    void copyLink(transferLinks.telegram, "Telegram-ссылка");
+                  }}
+                >
+                  Скопировать Telegram-ссылку
+                </button>
+                <button
+                  type="button"
+                  className="P-PetTransfer__secondaryAction"
+                  onClick={() => {
+                    trackButtonClick("pet_transfer_copy_vk");
+                    void copyLink(transferLinks.vk, "VK-ссылка");
+                  }}
+                >
+                  Скопировать VK-ссылку
+                </button>
+                <button
+                  type="button"
+                  className="P-PetTransfer__secondaryAction"
+                  onClick={() => {
+                    trackButtonClick("pet_transfer_copy_web");
+                    void copyLink(transferLinks.web, "Обычная ссылка");
+                  }}
+                >
+                  Скопировать обычную ссылку
+                </button>
+              </div>
+            ) : null}
           </section>
         ) : (
           <section className="P-PetTransfer__card">

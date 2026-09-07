@@ -46,7 +46,10 @@ def _user_name(user: User | None) -> str | None:
     return name or user.username or None
 
 
-def serialize_pet_transfer(transfer: PetTransfer) -> PetTransferResponse:
+def serialize_pet_transfer(
+    transfer: PetTransfer,
+    viewer: User | None = None,
+) -> PetTransferResponse:
     return PetTransferResponse(
         token=transfer.token,
         status=transfer.status,
@@ -54,6 +57,7 @@ def serialize_pet_transfer(transfer: PetTransfer) -> PetTransferResponse:
         pet_name=transfer.pet.name,
         pet_species=transfer.pet.species,
         from_user_name=_user_name(transfer.from_user),
+        is_sender=viewer is not None and transfer.from_user_id == viewer.id,
         expires_at=transfer.expires_at,
         created_at=transfer.created_at,
         accepted_at=transfer.accepted_at,

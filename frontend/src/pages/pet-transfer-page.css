@@ -10,7 +10,8 @@
 }
 
 .P-PetTransfer__back,
-.P-PetTransfer__primaryAction {
+.P-PetTransfer__primaryAction,
+.P-PetTransfer__secondaryAction {
   border-radius: 999px;
   display: inline-flex;
   align-items: center;
@@ -73,4 +74,18 @@
 .P-PetTransfer__primaryAction:disabled {
   cursor: default;
   opacity: 0.68;
+}
+
+.P-PetTransfer__actions {
+  display: grid;
+  gap: 10px;
+}
+
+.P-PetTransfer__secondaryAction {
+  min-height: 44px;
+  border: 1px solid rgba(41, 31, 58, 0.14);
+  background: var(--color-white);
+  color: var(--color-text);
+  font: var(--font-16);
+  cursor: pointer;
 }

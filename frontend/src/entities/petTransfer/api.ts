@@ -9,6 +9,7 @@ export type PetTransfer = {
   pet_name: string;
   pet_species: Pet["species"];
   from_user_name: string | null;
+  is_sender: boolean;
   expires_at: string;
   created_at: string;
   accepted_at: string | null;

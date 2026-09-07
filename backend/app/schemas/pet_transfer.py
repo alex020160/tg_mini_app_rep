@@ -17,6 +17,7 @@ class PetTransferResponse(BaseModel):
     pet_name: str
     pet_species: PetSpecies
     from_user_name: str | None
+    is_sender: bool = False
     expires_at: datetime
     created_at: datetime
     accepted_at: datetime | None = None

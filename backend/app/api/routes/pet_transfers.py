@@ -30,7 +30,7 @@ def create_pet_transfer_route(
     except ValueError as e:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(e)) from e
 
-    return serialize_pet_transfer(transfer)
+    return serialize_pet_transfer(transfer, current_user)
 
 
 @router.get("/{token}", response_model=PetTransferResponse)
@@ -44,7 +44,7 @@ def get_pet_transfer_route(
     except ValueError as e:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(e)) from e
 
-    return serialize_pet_transfer(transfer)
+    return serialize_pet_transfer(transfer, current_user)
 
 
 @router.post("/{token}/accept", response_model=PetTransferResponse)
@@ -60,7 +60,7 @@ def accept_pet_transfer_route(
     except ValueError as e:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(e)) from e
 
-    return serialize_pet_transfer(transfer)
+    return serialize_pet_transfer(transfer, current_user)
 
 
 @router.post("/{token}/cancel", response_model=PetTransferResponse)
@@ -76,4 +76,4 @@ def cancel_pet_transfer_route(
     except ValueError as e:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(e)) from e
 
-    return serialize_pet_transfer(transfer)
+    return serialize_pet_transfer(transfer, current_user)

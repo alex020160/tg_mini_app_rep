@@ -5,6 +5,7 @@ const launchParamNames = ["tgWebAppStartParam", "start_param", "startapp"];
 const telegramBotUsername = "SmartPetHelper_bot";
 const vkAppId = "54599546";
 const transferPrefix = "transfer_";
+const transferStorageKey = "smartpet_launch_transfer_token";
 
 function readFromParams(value: string, paramNames: string[]) {
   const params = new URLSearchParams(value.replace(/^[?#]/, ""));
@@ -24,6 +25,10 @@ function normalizePromoCode(value: string) {
 function normalizeTransferToken(value: string) {
   if (!value) return "";
   return value.startsWith(transferPrefix) ? value.slice(transferPrefix.length) : value;
+}
+
+function normalizeHashValue(value: string) {
+  return value.replace(/^#/, "");
 }
 
 function readTransferTokenFromPath() {
@@ -62,6 +67,9 @@ export function getLaunchTransferToken() {
   const directHashTransfer = readFromParams(window.location.hash, ["transfer"]);
   if (directHashTransfer) return normalizeTransferToken(directHashTransfer);
 
+  const rawHash = normalizeHashValue(window.location.hash);
+  if (rawHash.startsWith(transferPrefix)) return normalizeTransferToken(rawHash);
+
   const launchSearchTransfer = readFromParams(window.location.search, launchParamNames);
   if (launchSearchTransfer?.startsWith(transferPrefix)) {
     return normalizeTransferToken(launchSearchTransfer);
@@ -71,6 +79,21 @@ export function getLaunchTransferToken() {
   return launchHashTransfer?.startsWith(transferPrefix)
     ? normalizeTransferToken(launchHashTransfer)
     : "";
+}
+
+export function rememberLaunchTransferToken(token = getLaunchTransferToken()) {
+  if (!token) return "";
+
+  sessionStorage.setItem(transferStorageKey, token);
+  return token;
+}
+
+export function consumeLaunchTransferToken() {
+  const token = getLaunchTransferToken() || sessionStorage.getItem(transferStorageKey) || "";
+
+  sessionStorage.removeItem(transferStorageKey);
+
+  return token;
 }
 
 export function buildTelegramPromoLink(code = getLaunchPromoCode()) {
@@ -83,5 +106,5 @@ export function buildTelegramTransferLink(token: string) {
 }
 
 export function buildVkTransferLink(token: string) {
-  return `https://vk.ru/app${vkAppId}#transfer=${encodeURIComponent(token)}`;
+  return `https://vk.ru/app${vkAppId}#${transferPrefix}${encodeURIComponent(token)}`;
 }

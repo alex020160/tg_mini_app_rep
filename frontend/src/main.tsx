@@ -12,8 +12,9 @@ import {
   buildTelegramPromoLink,
   buildTelegramTransferLink,
   buildVkTransferLink,
+  consumeLaunchTransferToken,
   getLaunchPromoCode,
-  getLaunchTransferToken,
+  rememberLaunchTransferToken,
 } from "./shared/promo/promo";
 
 const rootElement = document.getElementById("root");
@@ -261,7 +262,7 @@ async function startApp() {
   });
 
   const runtimePlatform = detectRuntimePlatform();
-  const launchTransferToken = getLaunchTransferToken();
+  const launchTransferToken = rememberLaunchTransferToken();
 
   if (runtimePlatform === "browser" && launchTransferToken) {
     renderTransferOpenOptions(launchTransferToken);
@@ -275,7 +276,7 @@ async function startApp() {
 
   await initPlatform();
   await bootstrapAuth();
-  const transferToken = getLaunchTransferToken();
+  const transferToken = consumeLaunchTransferToken();
   if (transferToken && window.location.pathname !== `/transfer/${transferToken}`) {
     window.history.replaceState(null, "", `/transfer/${encodeURIComponent(transferToken)}`);
   }
