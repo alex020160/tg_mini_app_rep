@@ -101,6 +101,11 @@ export function buildTelegramPromoLink(code = getLaunchPromoCode()) {
   return `https://t.me/${telegramBotUsername}${query}`;
 }
 
+export function buildVkPromoLink(code = getLaunchPromoCode()) {
+  const hash = code ? `#promo=${encodeURIComponent(code)}` : "";
+  return `https://vk.ru/app${vkAppId}${hash}`;
+}
+
 export function buildTelegramTransferLink(token: string) {
   return `https://t.me/${telegramBotUsername}?start=${transferPrefix}${encodeURIComponent(token)}`;
 }

@@ -14,38 +14,45 @@ family7
 The backend gives the authenticated user the matching subscription after
 redeeming a code. Each user can redeem each code only once.
 
-Recommended Telegram Mini App links for QR:
+Recommended Telegram Mini App links for QR and posts:
 
 ```text
-https://t.me/SmartPetHelper_bot?startapp=premium30
-https://t.me/SmartPetHelper_bot?startapp=premium7
-https://t.me/SmartPetHelper_bot?startapp=family30
-https://t.me/SmartPetHelper_bot?startapp=family7
+https://t.me/SmartPetHelper_bot?startapp=premium7&utm_source=telegram&utm_medium=promo_link&utm_campaign=free_trial&utm_content=premium7
+https://t.me/SmartPetHelper_bot?startapp=premium30&utm_source=telegram&utm_medium=promo_link&utm_campaign=free_trial&utm_content=premium30
+https://t.me/SmartPetHelper_bot?startapp=family7&utm_source=telegram&utm_medium=promo_link&utm_campaign=free_trial&utm_content=family7
+https://t.me/SmartPetHelper_bot?startapp=family30&utm_source=telegram&utm_medium=promo_link&utm_campaign=free_trial&utm_content=family30
 ```
 
 VK Mini App links:
 
 ```text
-https://vk.ru/app54599546#promo=premium30
-https://vk.ru/app54599546#promo=premium7
-https://vk.ru/app54599546#promo=family30
-https://vk.ru/app54599546#promo=family7
+https://vk.ru/app54599546#promo=premium7&utm_source=vk&utm_medium=promo_link&utm_campaign=free_trial&utm_content=premium7
+https://vk.ru/app54599546#promo=premium30&utm_source=vk&utm_medium=promo_link&utm_campaign=free_trial&utm_content=premium30
+https://vk.ru/app54599546#promo=family7&utm_source=vk&utm_medium=promo_link&utm_campaign=free_trial&utm_content=family7
+https://vk.ru/app54599546#promo=family30&utm_source=vk&utm_medium=promo_link&utm_campaign=free_trial&utm_content=family30
 ```
 
-Fallback web links:
+Best links for Yandex Metrica tracking:
 
 ```text
-https://smartpet-lunyc.amvera.io/?promo=premium30
-https://smartpet-lunyc.amvera.io/?promo=premium7
-https://smartpet-lunyc.amvera.io/?promo=family30
-https://smartpet-lunyc.amvera.io/?promo=family7
+https://smartpet-lunyc.amvera.io/?promo=premium7&utm_source=telegram&utm_medium=promo_link&utm_campaign=free_trial&utm_content=premium7
+https://smartpet-lunyc.amvera.io/?promo=premium30&utm_source=telegram&utm_medium=promo_link&utm_campaign=free_trial&utm_content=premium30
+https://smartpet-lunyc.amvera.io/?promo=family7&utm_source=telegram&utm_medium=promo_link&utm_campaign=free_trial&utm_content=family7
+https://smartpet-lunyc.amvera.io/?promo=family30&utm_source=telegram&utm_medium=promo_link&utm_campaign=free_trial&utm_content=family30
+https://smartpet-lunyc.amvera.io/?promo=premium7&utm_source=vk&utm_medium=promo_link&utm_campaign=free_trial&utm_content=premium7
+https://smartpet-lunyc.amvera.io/?promo=premium30&utm_source=vk&utm_medium=promo_link&utm_campaign=free_trial&utm_content=premium30
+https://smartpet-lunyc.amvera.io/?promo=family7&utm_source=vk&utm_medium=promo_link&utm_campaign=free_trial&utm_content=family7
+https://smartpet-lunyc.amvera.io/?promo=family30&utm_source=vk&utm_medium=promo_link&utm_campaign=free_trial&utm_content=family30
 ```
 
 Use the Telegram link for QR campaigns, because Telegram passes `startapp` into
 the Mini App after the user opens it. Use the VK link for VK campaigns; VK keeps
 the hash part after `app54599546`, and the Mini App reads `promo` from it after
-VK auth identifies the user. The fallback web links redirect browser users to
-the Telegram link.
+VK auth identifies the user.
+
+For clean Yandex Metrica source tracking, prefer the `smartpet-lunyc.amvera.io`
+links in campaign materials. They open a lightweight platform-choice page first,
+so the counter records the UTM visit before the user opens Telegram or VK.
 
 ## Amvera environment variables
 
@@ -106,8 +113,8 @@ Invoke-RestMethod `
 After a breeder creates a transfer from the pet passport, the app generates:
 
 ```text
-https://t.me/SmartPetHelper_bot?startapp=transfer_TOKEN
-https://vk.ru/app54599546#transfer=TOKEN
+https://t.me/SmartPetHelper_bot?start=transfer_TOKEN
+https://vk.ru/app54599546#transfer_TOKEN
 https://smartpet-lunyc.amvera.io/transfer/TOKEN
 ```
 

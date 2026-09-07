@@ -10,6 +10,7 @@ import { AppProviders } from "./app/providers";
 import {
   buildTelegramPromoLink,
   buildTelegramTransferLink,
+  buildVkPromoLink,
   buildVkTransferLink,
   consumeLaunchTransferToken,
   getLaunchPromoCode,
@@ -175,6 +176,95 @@ function renderBootError(message: string) {
   );
 }
 
+function renderPromoOpenOptions(code: string) {
+  const telegramLink = buildTelegramPromoLink(code);
+  const vkLink = buildVkPromoLink(code);
+
+  trackPageView(`/promo/${encodeURIComponent(code)}${window.location.search}${window.location.hash}`, {
+    screen: "promo_open_options",
+    promo_code: code,
+    source: "browser",
+  });
+
+  root.render(
+    <StrictMode>
+      <div
+        style={{
+          minHeight: "100vh",
+          display: "grid",
+          placeItems: "center",
+          padding: "24px",
+          background: "var(--color-bg)",
+          color: "var(--color-text)",
+        }}
+      >
+        <div
+          style={{
+            width: "100%",
+            maxWidth: "430px",
+            background: "var(--color-white)",
+            borderRadius: "24px",
+            padding: "24px",
+            boxShadow: "var(--shadow-soft)",
+            display: "grid",
+            gap: "14px",
+          }}
+        >
+          <div style={{ font: "var(--font-24)" }}>Бесплатный доступ</div>
+          <div style={{ font: "var(--font-14)", color: "var(--color-grey-text)" }}>
+            Откройте SmartPet Helper внутри Telegram или VK, чтобы приложение
+            определило ваш аккаунт и активировало промокод.
+          </div>
+          <a
+            href={telegramLink}
+            onClick={() => {
+              trackEvent("promo_open_platform_clicked", {
+                platform: "telegram",
+                promo_code: code,
+              });
+            }}
+            style={{
+              minHeight: "44px",
+              borderRadius: "999px",
+              background: "var(--color-purple)",
+              color: "var(--color-text)",
+              display: "inline-flex",
+              alignItems: "center",
+              justifyContent: "center",
+              textDecoration: "none",
+              font: "var(--font-16)",
+            }}
+          >
+            Открыть в Telegram
+          </a>
+          <a
+            href={vkLink}
+            onClick={() => {
+              trackEvent("promo_open_platform_clicked", {
+                platform: "vk",
+                promo_code: code,
+              });
+            }}
+            style={{
+              minHeight: "44px",
+              borderRadius: "999px",
+              border: "1px solid rgba(41, 31, 58, 0.14)",
+              color: "var(--color-text)",
+              display: "inline-flex",
+              alignItems: "center",
+              justifyContent: "center",
+              textDecoration: "none",
+              font: "var(--font-16)",
+            }}
+          >
+            Открыть во VK
+          </a>
+        </div>
+      </div>
+    </StrictMode>,
+  );
+}
+
 function renderTransferOpenOptions(token: string) {
   const telegramLink = buildTelegramTransferLink(token);
   const vkLink = buildVkTransferLink(token);
@@ -257,7 +347,7 @@ function renderTransferOpenOptions(token: string) {
 
 async function startApp() {
   initAnalytics();
-  trackPageView(`${window.location.pathname}${window.location.search}`, {
+  trackPageView(`${window.location.pathname}${window.location.search}${window.location.hash}`, {
     screen: "boot",
     source: "startup",
   });
@@ -270,8 +360,9 @@ async function startApp() {
     return;
   }
 
-  if (runtimePlatform === "browser" && getLaunchPromoCode()) {
-    window.location.replace(buildTelegramPromoLink());
+  const launchPromoCode = getLaunchPromoCode();
+  if (runtimePlatform === "browser" && launchPromoCode) {
+    renderPromoOpenOptions(launchPromoCode);
     return;
   }
 

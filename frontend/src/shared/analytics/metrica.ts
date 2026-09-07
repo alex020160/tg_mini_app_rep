@@ -18,6 +18,16 @@ const counterId = Number.parseInt(rawCounterId ?? "", 10);
 const isEnabled = Number.isFinite(counterId) && counterId > 0;
 let isInitialized = false;
 let lastPageViewPath: string | null = null;
+const attributionStorageKey = "smartpet_metrica_attribution";
+const attributionParamNames = [
+  "utm_source",
+  "utm_medium",
+  "utm_campaign",
+  "utm_content",
+  "utm_term",
+  "utm_referrer",
+  "promo",
+];
 
 const METRICA_SCRIPT_URLS = [
   `https://mc.yandex.com/metrika/tag.js?id=${counterId}`,
@@ -30,6 +40,81 @@ function sanitizeParams(params?: AnalyticsParams) {
   return Object.fromEntries(
     Object.entries(params).filter(([, value]) => value !== undefined),
   );
+}
+
+function readParamsFrom(value: string) {
+  const cleaned = value.replace(/^[?#]/, "");
+  const queryStart = cleaned.indexOf("?");
+  const paramsSource = queryStart >= 0 ? cleaned.slice(queryStart + 1) : cleaned;
+
+  return new URLSearchParams(paramsSource);
+}
+
+function readAttributionFromLocation() {
+  const attribution: AnalyticsParams = {};
+
+  for (const source of [window.location.search, window.location.hash]) {
+    const params = readParamsFrom(source);
+
+    for (const paramName of attributionParamNames) {
+      const value = params.get(paramName);
+      if (value && attribution[paramName] === undefined) {
+        attribution[paramName] = value;
+      }
+    }
+  }
+
+  return attribution;
+}
+
+function getAttributionParams() {
+  if (typeof window === "undefined") return {};
+
+  const currentAttribution = readAttributionFromLocation();
+  const hasCurrentAttribution = Object.keys(currentAttribution).length > 0;
+
+  if (hasCurrentAttribution) {
+    sessionStorage.setItem(attributionStorageKey, JSON.stringify(currentAttribution));
+    return currentAttribution;
+  }
+
+  try {
+    const storedValue = sessionStorage.getItem(attributionStorageKey);
+    return storedValue ? JSON.parse(storedValue) as AnalyticsParams : {};
+  } catch {
+    return {};
+  }
+}
+
+function withAttribution(params?: AnalyticsParams) {
+  return sanitizeParams({
+    ...getAttributionParams(),
+    ...params,
+  });
+}
+
+function appendAttributionToPath(path: string) {
+  const attribution = getAttributionParams();
+  const utmEntries = Object.entries(attribution).filter(([key]) => key.startsWith("utm_"));
+
+  if (!utmEntries.length || path.includes("utm_source=") || path.includes("utm_medium=")) {
+    return path;
+  }
+
+  const [pathWithoutHash, hash = ""] = path.split("#", 2);
+  const separator = pathWithoutHash.includes("?") ? "&" : "?";
+  const query = new URLSearchParams();
+
+  for (const [key, value] of utmEntries) {
+    if (typeof value === "string" || typeof value === "number" || typeof value === "boolean") {
+      query.set(key, String(value));
+    }
+  }
+
+  const suffix = query.toString();
+  if (!suffix) return path;
+
+  return `${pathWithoutHash}${separator}${suffix}${hash ? `#${hash}` : ""}`;
 }
 
 function callYm(method: Parameters<YmFunction>[1], ...args: unknown[]) {
@@ -90,6 +175,7 @@ export function initAnalytics() {
   }
 
   callYm("init", {
+    defer: true,
     webvisor: true,
     clickmap: true,
     trackLinks: true,
@@ -106,12 +192,13 @@ export function trackPageView(path: string, params?: AnalyticsParams) {
   }
 
   lastPageViewPath = path;
-  const cleanedParams = sanitizeParams(params);
-  callYm("hit", path, cleanedParams ? { params: cleanedParams } : undefined);
+  const analyticsPath = appendAttributionToPath(path);
+  const cleanedParams = withAttribution(params);
+  callYm("hit", analyticsPath, cleanedParams ? { params: cleanedParams } : undefined);
 }
 
 export function trackEvent(goal: string, params?: AnalyticsParams) {
-  callYm("reachGoal", goal, sanitizeParams(params));
+  callYm("reachGoal", goal, withAttribution(params));
 }
 
 export function trackButtonClick(buttonId: string, params?: AnalyticsParams) {
@@ -139,6 +226,8 @@ export function trackScreenView(screen: string, params?: AnalyticsParams) {
 export function setAnalyticsUser(user: AuthUser) {
   callYm("userParams", {
     UserID: user.id,
+    platform: user.platform,
+    platform_user_id: user.platform_user_id,
     subscription_plan: user.subscription_plan,
     timezone: user.timezone,
   });
