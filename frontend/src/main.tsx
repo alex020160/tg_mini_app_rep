@@ -3,7 +3,6 @@ import { createRoot } from "react-dom/client";
 import { RouterProvider } from "react-router-dom";
 
 import "./index.css";
-import { router } from "./app/router";
 import { initAnalytics, trackEvent, trackPageView } from "./shared/analytics/metrica";
 import { bootstrapAuth } from "./shared/auth/bootstrap";
 import { detectRuntimePlatform, getPlatformDisplayName, initPlatform } from "./shared/platform";
@@ -24,7 +23,7 @@ if (!rootElement) {
 }
 
 const root = createRoot(rootElement);
-const appBuild = "telegram-hash-fix-20260903-1";
+const appBuild = "transfer-router-fix-20260907-1";
 
 function hasLaunchMarker(value: string) {
   const rawValue = value.replace(/^[?#]/, "");
@@ -37,7 +36,9 @@ function hasLaunchMarker(value: string) {
   }
 }
 
-function renderApp() {
+async function renderApp() {
+  const { router } = await import("./app/router");
+
   root.render(
     <StrictMode>
       <AppProviders>
@@ -281,7 +282,7 @@ async function startApp() {
     window.history.replaceState(null, "", `/transfer/${encodeURIComponent(transferToken)}`);
   }
   trackEvent("app_open");
-  renderApp();
+  await renderApp();
 }
 
 void startApp().catch((error: unknown) => {

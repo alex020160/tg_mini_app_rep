@@ -102,7 +102,7 @@ export function buildTelegramPromoLink(code = getLaunchPromoCode()) {
 }
 
 export function buildTelegramTransferLink(token: string) {
-  return `https://t.me/${telegramBotUsername}?startapp=${transferPrefix}${encodeURIComponent(token)}`;
+  return `https://t.me/${telegramBotUsername}?start=${transferPrefix}${encodeURIComponent(token)}`;
 }
 
 export function buildVkTransferLink(token: string) {

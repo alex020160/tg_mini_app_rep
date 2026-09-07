@@ -16,6 +16,7 @@ SUPPORT_FUND_URL = "https://tbank.ru/cf/3cgq9koLxxT"
 VK_MINI_APP_URL = "https://vk.ru/app54599546"
 VK_COMMUNITY_URL = "https://vk.ru/club239532031"
 TELEGRAM_CHANNEL_URL = "https://t.me/smartpet_info"
+TRANSFER_PAYLOAD_PREFIX = "transfer_"
 
 
 def _mini_app_url(path: str = "") -> str:
@@ -40,6 +41,19 @@ def _open_app_inline_keyboard(path: str = "") -> dict[str, Any]:
     return {
         "inline_keyboard": [
             [{"text": "Открыть SmartPet", "web_app": {"url": _mini_app_url(path)}}],
+        ],
+    }
+
+
+def _transfer_inline_keyboard(token: str) -> dict[str, Any]:
+    return {
+        "inline_keyboard": [
+            [
+                {
+                    "text": "Принять питомца",
+                    "web_app": {"url": _mini_app_url(f"/transfer/{token}")},
+                }
+            ],
         ],
     }
 
@@ -124,6 +138,21 @@ async def handle_telegram_update(update: dict[str, Any]) -> None:
     text = message.get("text") if isinstance(message.get("text"), str) else ""
 
     if text.startswith("/start"):
+        parts = text.split(maxsplit=1)
+        start_payload = parts[1].strip() if len(parts) > 1 else ""
+        if start_payload.startswith(TRANSFER_PAYLOAD_PREFIX):
+            transfer_token = start_payload.removeprefix(TRANSFER_PAYLOAD_PREFIX)
+            if transfer_token:
+                await _send_telegram_message(
+                    chat_id=chat_id,
+                    text=(
+                        "Вам передали питомца в SmartPet Helper.\n\n"
+                        "Откройте mini app по кнопке ниже и нажмите «Принять питомца»."
+                    ),
+                    reply_markup=_transfer_inline_keyboard(transfer_token),
+                )
+                return
+
         await send_bot_menu(chat_id, first_name)
         return
 
