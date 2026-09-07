@@ -20,14 +20,18 @@ and sends JavaScript goals with `ym(..., "reachGoal", ...)`.
 
 ## Promo UTM links
 
-Direct Telegram links:
+Direct Telegram links, without UTM:
 
 ```text
-https://t.me/SmartPetHelper_bot?startapp=premium7&utm_source=telegram&utm_medium=promo_link&utm_campaign=free_trial&utm_content=premium7
-https://t.me/SmartPetHelper_bot?startapp=premium30&utm_source=telegram&utm_medium=promo_link&utm_campaign=free_trial&utm_content=premium30
-https://t.me/SmartPetHelper_bot?startapp=family7&utm_source=telegram&utm_medium=promo_link&utm_campaign=free_trial&utm_content=family7
-https://t.me/SmartPetHelper_bot?startapp=family30&utm_source=telegram&utm_medium=promo_link&utm_campaign=free_trial&utm_content=family30
+https://t.me/SmartPetHelper_bot?startapp=premium7
+https://t.me/SmartPetHelper_bot?startapp=premium30
+https://t.me/SmartPetHelper_bot?startapp=family7
+https://t.me/SmartPetHelper_bot?startapp=family30
 ```
+
+Do not add `utm_*` parameters directly to Telegram Mini App links. Telegram
+deep links are not SmartPet pages, and the Metrica counter cannot count visits
+on `t.me`.
 
 Direct VK links:
 
@@ -52,9 +56,9 @@ https://smartpet-lunyc.amvera.io/?promo=family30&utm_source=vk&utm_medium=promo_
 ```
 
 Use the `smartpet-lunyc.amvera.io` links when the traffic source must be visible
-in Yandex Metrica UTM reports. Direct `t.me` links are still useful, but the
-Metrica counter is not installed on `t.me`, so the cleanest tracked first visit
-happens on the SmartPet domain.
+in Yandex Metrica UTM reports. Direct `t.me` links are still useful for Telegram
+posts and chats, but the Metrica counter is not installed on `t.me`, so the
+cleanest tracked first visit happens on the SmartPet domain.
 
 ## Goals
 

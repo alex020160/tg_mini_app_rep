@@ -14,14 +14,18 @@ family7
 The backend gives the authenticated user the matching subscription after
 redeeming a code. Each user can redeem each code only once.
 
-Recommended Telegram Mini App links for QR and posts:
+Direct Telegram Mini App links, without UTM:
 
 ```text
-https://t.me/SmartPetHelper_bot?startapp=premium7&utm_source=telegram&utm_medium=promo_link&utm_campaign=free_trial&utm_content=premium7
-https://t.me/SmartPetHelper_bot?startapp=premium30&utm_source=telegram&utm_medium=promo_link&utm_campaign=free_trial&utm_content=premium30
-https://t.me/SmartPetHelper_bot?startapp=family7&utm_source=telegram&utm_medium=promo_link&utm_campaign=free_trial&utm_content=family7
-https://t.me/SmartPetHelper_bot?startapp=family30&utm_source=telegram&utm_medium=promo_link&utm_campaign=free_trial&utm_content=family30
+https://t.me/SmartPetHelper_bot?startapp=premium7
+https://t.me/SmartPetHelper_bot?startapp=premium30
+https://t.me/SmartPetHelper_bot?startapp=family7
+https://t.me/SmartPetHelper_bot?startapp=family30
 ```
+
+Do not add `utm_*` parameters directly to Telegram Mini App links. Use the
+SmartPet-domain links below when campaign traffic must be visible in Yandex
+Metrica UTM reports.
 
 VK Mini App links:
 
@@ -45,10 +49,10 @@ https://smartpet-lunyc.amvera.io/?promo=family7&utm_source=vk&utm_medium=promo_l
 https://smartpet-lunyc.amvera.io/?promo=family30&utm_source=vk&utm_medium=promo_link&utm_campaign=free_trial&utm_content=family30
 ```
 
-Use the Telegram link for QR campaigns, because Telegram passes `startapp` into
-the Mini App after the user opens it. Use the VK link for VK campaigns; VK keeps
-the hash part after `app54599546`, and the Mini App reads `promo` from it after
-VK auth identifies the user.
+Use the direct Telegram link only when a one-tap Telegram opening matters more
+than source attribution. Use the VK link for VK campaigns; VK keeps the hash part
+after `app54599546`, and the Mini App reads `promo` from it after VK auth
+identifies the user.
 
 For clean Yandex Metrica source tracking, prefer the `smartpet-lunyc.amvera.io`
 links in campaign materials. They open a lightweight platform-choice page first,
