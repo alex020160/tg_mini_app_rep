@@ -139,14 +139,14 @@ VK_GROUP_ACCESS_TOKEN=community_access_token
 VK_API_VERSION=5.199
 ```
 
-Frontend Vercel variable, optional because the app defaults to the same group:
+Frontend build variable, optional because the app defaults to the same group:
 
 ```text
 VITE_VK_GROUP_ID=239532031
 ```
 
 The group token should be generated in the VK community settings. It must allow
-the community to send messages. Do not put the group token into frontend/Vercel.
+the community to send messages. Do not put the group token into frontend builds.
 After enabling messages in the profile, use the `Отправить тест VK` button to
 verify that the community token and permissions work before testing scheduled
 reminders.

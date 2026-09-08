@@ -4,6 +4,23 @@
 
 The frontend uses Yandex Metrica counter `108964987`.
 
+The counter site address in Yandex Metrica must be:
+
+```text
+smartpet-lunyc.amvera.io
+```
+
+If the counter header or settings still show `tg-miniapp-sand.vercel.app`,
+update the counter settings manually in Yandex Metrica:
+
+```text
+Settings -> Counter -> Site address
+```
+
+Also check that the counter does not accept data only from the old Vercel domain.
+If domain filtering is enabled, add `smartpet-lunyc.amvera.io` or disable that
+restriction.
+
 The counter is initialized as an SPA counter with:
 
 ```text

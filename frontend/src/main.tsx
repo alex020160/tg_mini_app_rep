@@ -163,12 +163,12 @@ function renderBootError(message: string) {
             {canOpenPromoInTelegram
               ? "Если Telegram не открылся автоматически, скопируй эту страницу в Telegram или используй QR с Telegram-ссылкой."
               : isTelegramInitDataMissing
-              ? "Если ты уже открыла через BotFather menu button, проверь, что туда вставлена последняя Vercel-ссылка."
+              ? "Если ты уже открыла через BotFather menu button, проверь, что туда вставлена последняя ссылка приложения."
               : isVkLaunchParamsMissing
                 ? "Проверь, что в настройках VK Mini App указан правильный URL и backend знает VK_APP_ID/VK_APP_SECRET."
                 : isPlatformLaunchParamsMissing
                   ? "Если открываешь из VK, поставь в настройках VK Mini App URL с параметром ?v=4 и полностью перезапусти VK."
-                : "Проверь backend URL, CORS и переменные окружения Vercel."}
+                : "Проверь backend URL, CORS и переменные окружения фронтенда."}
           </div>
         </div>
       </div>

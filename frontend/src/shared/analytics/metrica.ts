@@ -10,6 +10,8 @@ type YmFunction = (
 declare global {
   interface Window {
     ym?: YmFunction;
+    __SMARTPET_METRICA_BOOTSTRAPPED__?: boolean;
+    __SMARTPET_METRICA_COUNTER_ID__?: number;
   }
 }
 
@@ -127,6 +129,11 @@ function callYm(method: Parameters<YmFunction>[1], ...args: unknown[]) {
 
 export function initAnalytics() {
   if (!isEnabled || isInitialized || typeof window === "undefined" || typeof document === "undefined") {
+    return;
+  }
+
+  if (window.__SMARTPET_METRICA_BOOTSTRAPPED__ === true) {
+    isInitialized = true;
     return;
   }
 
