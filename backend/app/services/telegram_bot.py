@@ -1,5 +1,6 @@
 import asyncio
 from typing import Any
+from urllib.parse import parse_qsl, urlencode, urlsplit, urlunsplit
 
 import httpx
 
@@ -20,7 +21,33 @@ TRANSFER_PAYLOAD_PREFIX = "transfer_"
 
 
 def _mini_app_url(path: str = "") -> str:
-    return f"{settings.telegram_mini_app_url.rstrip('/')}{path}"
+    base_parts = urlsplit(settings.telegram_mini_app_url.rstrip("/"))
+    requested_parts = urlsplit(path)
+    requested_path = requested_parts.path
+    base_path = base_parts.path.rstrip("/")
+
+    combined_path = "/".join(
+        part.strip("/")
+        for part in (base_path, requested_path)
+        if part.strip("/")
+    )
+    if combined_path:
+        combined_path = f"/{combined_path}"
+    else:
+        combined_path = base_parts.path or "/"
+
+    query = dict(parse_qsl(base_parts.query, keep_blank_values=True))
+    query.update(parse_qsl(requested_parts.query, keep_blank_values=True))
+    if settings.telegram_mini_app_version:
+        query["v"] = settings.telegram_mini_app_version
+
+    return urlunsplit((
+        base_parts.scheme,
+        base_parts.netloc,
+        combined_path,
+        urlencode(query),
+        requested_parts.fragment or base_parts.fragment,
+    ))
 
 
 def _main_keyboard() -> dict[str, Any]:

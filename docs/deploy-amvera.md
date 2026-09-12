@@ -42,6 +42,7 @@ DATABASE_URL=<amvera-postgres-connection-string>
 TELEGRAM_BOT_TOKEN=<telegram-bot-token>
 PUBLIC_BASE_URL=https://smartpet-lunyc.amvera.io
 TELEGRAM_MINI_APP_URL=https://smartpet-lunyc.amvera.io
+TELEGRAM_MINI_APP_VERSION=20260912
 TELEGRAM_SUPPORT_URL=https://t.me/maiiamk
 RUN_TELEGRAM_BOT_POLLING=true
 TELEGRAM_BOT_POLLING_TIMEOUT_SECONDS=25
@@ -163,6 +164,10 @@ Polling setup sets:
 - bot menu button: `Мини Апп`
 - slash command: `/start`
 - reply keyboard with only `Открыть мини апп`, `Поддержать проект`, `Связаться с нами`
+
+Telegram caches Web App URLs aggressively. Bump `TELEGRAM_MINI_APP_VERSION`
+after frontend/analytics releases, rebuild Amvera, and call setup polling again
+to refresh the menu button URL.
 
 The reply keyboard buttons send text to the bot. The bot then replies with an
 inline Mini App or support button. This keeps Telegram Desktop from opening the
