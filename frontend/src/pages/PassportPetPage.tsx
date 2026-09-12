@@ -243,6 +243,12 @@ export default function PassportPetPage() {
     ensureActivePet(pet);
   }, [pet]);
 
+  useEffect(() => {
+    if (!pet?.id) return;
+
+    trackEvent("passport_opened", { pet_id: pet.id });
+  }, [pet?.id]);
+
   const eventsQuery = useQuery({
     queryKey: ["events", "pet", pet?.id],
     queryFn: () => getEvents({ pet_id: pet!.id }),

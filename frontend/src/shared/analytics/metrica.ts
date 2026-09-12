@@ -10,13 +10,14 @@ type YmFunction = (
 declare global {
   interface Window {
     ym?: YmFunction;
+    dataLayer?: unknown[];
     __SMARTPET_METRICA_BOOTSTRAPPED__?: boolean;
     __SMARTPET_METRICA_COUNTER_ID__?: number;
   }
 }
 
 const rawCounterId = import.meta.env.VITE_YANDEX_METRICA_ID;
-const counterId = Number.parseInt(rawCounterId ?? "", 10);
+const counterId = Number.parseInt(rawCounterId ?? "112520314", 10);
 const isEnabled = Number.isFinite(counterId) && counterId > 0;
 let isInitialized = false;
 let lastPageViewPath: string | null = null;
@@ -32,8 +33,8 @@ const attributionParamNames = [
 ];
 
 const METRICA_SCRIPT_URLS = [
-  `https://mc.yandex.com/metrika/tag.js?id=${counterId}`,
   `https://mc.yandex.ru/metrika/tag.js?id=${counterId}`,
+  `https://mc.yandex.com/metrika/tag.js?id=${counterId}`,
 ];
 
 function sanitizeParams(params?: AnalyticsParams) {
@@ -155,6 +156,8 @@ export function initAnalytics() {
     METRICA_SCRIPT_URLS.includes(script.src),
   );
 
+  window.dataLayer = window.dataLayer || [];
+
   if (!hasScript) {
     const script = document.createElement("script");
     const firstScript = document.scripts[0];
@@ -182,9 +185,12 @@ export function initAnalytics() {
   }
 
   callYm("init", {
-    defer: true,
+    ssr: true,
     webvisor: true,
     clickmap: true,
+    ecommerce: "dataLayer",
+    referrer: document.referrer,
+    url: window.location.href,
     trackLinks: true,
     accurateTrackBounce: true,
     trackHash: true,

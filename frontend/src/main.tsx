@@ -373,6 +373,7 @@ async function startApp() {
     window.history.replaceState(null, "", `/transfer/${encodeURIComponent(transferToken)}`);
   }
   trackEvent("app_open");
+  trackEvent("app_opened", { platform: runtimePlatform });
   await renderApp();
 }
 

@@ -1,4 +1,4 @@
-﻿import { useMemo, useState } from "react";
+﻿import { useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { Check, Shield, Sparkles } from "lucide-react";
@@ -74,6 +74,7 @@ const plans: Plan[] = [
 export default function SubscriptionsPage() {
   const navigate = useNavigate();
   const [selectedPlanId, setSelectedPlanId] = useState("premium");
+  const didTrackScreenOpen = useRef(false);
   const supportLabel = useMemo(() => getPlatformSupportLabel(), []);
   const userQuery = useQuery({
     queryKey: ["current-user"],
@@ -94,6 +95,13 @@ export default function SubscriptionsPage() {
     () => `Здравствуйте! Хочу оформить подписку: ${selectedPlan.name}.`,
     [selectedPlan.name],
   );
+
+  useEffect(() => {
+    if (didTrackScreenOpen.current || !user) return;
+
+    didTrackScreenOpen.current = true;
+    trackEvent("subscription_screen_opened", { current_plan: currentPlanId });
+  }, [currentPlanId, user]);
 
   return (
     <AppLayout>

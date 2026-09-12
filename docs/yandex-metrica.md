@@ -2,7 +2,15 @@
 
 ## Counter
 
-The frontend uses Yandex Metrica counter `108964987`.
+The frontend uses Yandex Metrica counter `112520314`.
+
+Amvera frontend builds should use:
+
+```text
+VITE_YANDEX_METRICA_ID=112520314
+```
+
+This value is public and is not a secret.
 
 The counter site address in Yandex Metrica must be:
 
@@ -24,9 +32,10 @@ restriction.
 The counter is initialized as an SPA counter with:
 
 ```text
-defer=true
+ssr=true
 webvisor=true
 clickmap=true
+ecommerce=dataLayer
 trackLinks=true
 accurateTrackBounce=true
 trackHash=true
@@ -83,15 +92,23 @@ Create JavaScript-event goals in Yandex Metrica with these identifiers:
 
 ```text
 app_open
+app_opened
 auth_success
 promo_open_platform_clicked
 promo_redeemed
 promo_redeem_failed
+subscription_screen_opened
 subscription_plan_selected
 subscription_cta_clicked
 pet_created
+pet_updated
+pet_deleted
 reminder_created
+reminder_updated
+reminder_deleted
+reminder_completed
 health_check_created
+passport_opened
 passport_pdf_exported
 pet_transfer_created
 pet_transfer_accepted
@@ -130,7 +147,85 @@ subscription_plan
 button_id
 feature
 action
+current_plan
+plan
+code
+already_redeemed
+pet_id
+event_id
+task_id
+source
+mode
+screen
+path
 ```
+
+## Analyst handoff
+
+The analyst can create the counter, goals, dashboards, UTM naming rules, and
+reports without code access. Code-owned analytics is already wired through
+`trackEvent(...)`, `trackPageView(...)`, `trackButtonClick(...)`, and
+`trackFeatureUse(...)`.
+
+Code-owned events that are already sent:
+
+```text
+app_open
+app_opened
+boot_error
+auth_success
+promo_open_platform_clicked
+promo_redeemed
+promo_redeem_failed
+screen_view
+button_click
+feature_use
+pet_created
+pet_updated
+pet_deleted
+pet_switch
+reminder_modal_open
+reminder_type_selected
+reminder_pet_selected
+reminder_created
+reminder_updated
+reminder_deleted
+reminder_completed
+reminder_uncompleted
+repeat_enabled
+repeat_preset_selected
+calendar_day_selected
+subscription_screen_opened
+subscription_plan_selected
+subscription_cta_clicked
+passport_opened
+passport_pdf_exported
+passport_pdf_blocked_basic_plan
+pet_transfer_created
+pet_transfer_accepted
+health_check_created
+health_check_blocked_basic_plan
+procedure_next_reminder_preset_selected
+vk_messages_enabled
+vk_messages_enable_failed
+vk_messages_test_sent
+vk_messages_test_failed
+timezone_changed
+admin_subscription_updated
+```
+
+The first dashboards should focus on:
+
+```text
+Source -> app_opened -> auth_success -> pet_created -> reminder_created
+Source -> subscription_screen_opened -> subscription_plan_selected -> subscription_cta_clicked
+Source -> promo_redeemed
+pet_transfer_created -> pet_transfer_accepted
+passport_opened -> passport_pdf_exported
+```
+
+For `button_click` and `feature_use`, build reports by parameters instead of
+creating a separate Yandex goal for every button.
 
 ## Click Map
 
